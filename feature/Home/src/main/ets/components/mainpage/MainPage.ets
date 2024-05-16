@@ -7,11 +7,14 @@ import { HomeRecommend } from '../HomeRecommend'
 @Component
 export struct MainPage {
   build() {
-    Column() {
-      HomeBanner()
-      HomeCategory()
-      HomeNew()
-      HomeRecommend()
+    Scroll() {
+      Column() {
+        HomeBanner()
+        HomeCategory()
+        HomeNew()
+        HomeRecommend()
+      }
     }
+
   }
 }
