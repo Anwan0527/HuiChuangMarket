@@ -1,16 +1,17 @@
+import { HomeBanner } from '../HomeBanner'
+import { HomeCategory } from '../HomeCategory'
+import { HomeNew } from '../HomeNew'
+import { HomeRecommend } from '../HomeRecommend'
+
+@Entry
 @Component
 export struct MainPage {
-  @State message: string = 'Hello World';
-
   build() {
-    Row() {
-      Column() {
-        Text(this.message)
-          .fontSize(50)
-          .fontWeight(FontWeight.Bold)
-      }
-      .width('100%')
+    Column() {
+      HomeBanner()
+      HomeCategory()
+      HomeNew()
+      HomeRecommend()
     }
-    .height('100%')
   }
 }

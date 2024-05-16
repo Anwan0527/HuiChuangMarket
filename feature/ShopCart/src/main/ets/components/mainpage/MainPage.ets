@@ -5,7 +5,7 @@ export struct MainPage {
   build() {
     Row() {
       Column() {
-        Text(this.message)
+        Text('购物袋')
           .fontSize(50)
           .fontWeight(FontWeight.Bold)
       }

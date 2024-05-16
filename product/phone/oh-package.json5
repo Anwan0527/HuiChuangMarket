@@ -8,8 +8,8 @@
   "dependencies": {
     "@CH/home": 'file:../../feature/Home',
     "@CH/My": "file:../../feature/My",
-    "@CH/ShopCart": "file:../../feature/ShopCart",
+    "@CH/Cart": "file:../../feature/ShopCart",
     "@CH/common": "file:../../common",
-    "@CH/category":"file:../../feature/Category"
+    "@CH/category": "file:../../feature/Category"
   }
 }
