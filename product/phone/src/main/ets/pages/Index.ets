@@ -1,20 +1,48 @@
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World';
+  @State activeIndex: number = 0
 
   build() {
-    RelativeContainer() {
-      Text(this.message)
-        .id('HelloWorld')
-        .fontSize(50)
-        .fontWeight(FontWeight.Bold)
-        .alignRules({
-          center: { anchor: '__container__', align: VerticalAlign.Center },
-          middle: { anchor: '__container__', align: HorizontalAlign.Center }
-        })
+    Tabs({ barPosition: BarPosition.End }) {
+      TabContent() {
+        Text('首页')
+      }
+      .tabBar(this.TabBarBuilder('首页', $r("app.media.ic_public_home_normal"), $r("app.media.ic_public_home_actived"),
+        0))
+
+      TabContent() {
+        Text('分类')
+      }
+      .tabBar(this.TabBarBuilder('分类', $r("app.media.ic_public_pro_normal"), $r("app.media.ic_public_pro_actived"),
+        1))
+
+      TabContent() {
+        Text('购物袋')
+      }
+      .tabBar(this.TabBarBuilder('购物袋', $r("app.media.ic_public_cart_normal"),
+        $r("app.media.ic_public_cart_actived"),
+        2))
+
+      TabContent() {
+        Text('我的')
+      }
+      .tabBar(this.TabBarBuilder('我的', $r("app.media.ic_public_my_normal"), $r("app.media.ic_public_my_actived"), 3))
     }
-    .height('100%')
-    .width('100%')
+    .barMode(BarMode.Fixed)
+    .scrollable(false)
+  }
+
+  @Builder
+  TabBarBuilder(text: string, icon: Resource, activeIcon: Resource, index: number) {
+    Column() {
+      // icon
+      Image(this.activeIndex === index ? activeIcon : icon).width(22).width(22)
+      // text
+      Text(text).fontSize(11).fontColor(this.activeIndex === index ? '#191919' : '#6B6B6B')
+    }
+    .onClick(() => {
+      this.activeIndex = index
+    })
   }
 }
