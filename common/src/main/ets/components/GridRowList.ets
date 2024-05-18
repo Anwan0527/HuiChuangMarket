@@ -1,7 +1,9 @@
 export interface GoodsItemType {
+  desc: string;
   id: string;
   name: string;
-  payCount: number;
+  orderNum?: number;
+  payCount?: number;
   picture: string;
   price: number;
 }

@@ -26,14 +26,20 @@ struct SearchPage {
           .fontColor('#A6A3AD')
           .onSubmit(() => {
             router.pushUrl({
-              url: 'pages/SearchResultPage'
+              url: 'pages/SearchResultPage',
+              params: {
+                keyword: this.Keyword
+              }
             })
           })
         //button
         Button("搜索")
           .onClick(() => {
             router.pushUrl({
-              url: 'pages/SearchResultPage'
+              url: 'pages/SearchResultPage',
+              params: {
+                keyword: this.Keyword
+              }
 
             })
             // promptAction.showToast({
