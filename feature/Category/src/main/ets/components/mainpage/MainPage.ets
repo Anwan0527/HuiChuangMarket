@@ -1,4 +1,5 @@
 import { CategoryType, getCategoryListAPI } from '../../api/category'
+import { promptAction } from '@kit.ArkUI'
 
 @Entry
 @Component
@@ -32,6 +33,9 @@ export struct MainPage {
           .margin(10)
           .onClick(() => {
             //跳转搜索页面
+            promptAction.showToast({
+              message: '想笑'
+            })
           })
       }
       .width("100%")
