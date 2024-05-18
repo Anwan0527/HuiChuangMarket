@@ -1,23 +1,30 @@
-import { BannerItem } from '../apis/banner'
+import { Log } from '@abner/log'
+import { BannerItemType, getBannerListAPI } from '../apis/banner'
 
 @Entry
 @Component
 export struct HomeBanner {
-  @State
-  bannerList: BannerItem[] = new Array(4).fill({
-    id: "42",
-    imgUrl: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meikou/banner/nuandong_sj.png",
-    hrefUrl: "/category/1181622006",
-    type: "1"
-  })
+  @State bannerList: BannerItemType[] = []
+  GetGoodsList = async () => {
+    try {
+      const res = await getBannerListAPI()
+      this.bannerList = res.data.result
+    } catch (e) {
+      Log.error(e)
+    }
+  }
   private swiperController: SwiperController = new SwiperController()
+
+  aboutToAppear() {
+    this.GetGoodsList()
+  }
 
   build() {
     Column() {
       Swiper(this.swiperController) {
         ForEach(
           this.bannerList,
-          (item: BannerItem) => {
+          (item: BannerItemType) => {
             Image(item.imgUrl)
               .width('100%')
               .aspectRatio(360 / 240)

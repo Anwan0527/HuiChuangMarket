@@ -1,19 +1,25 @@
 import { GridRowList, GoodsItemType } from '@HC/common/Index'
+import { Log } from '@abner/log/src/main/ets/Log'
+import { getRecommendAPI } from '../apis/recommendList'
 
 
 @Entry
 @Component
 export struct HomeRecommend {
   @State
-  recommendList: GoodsItemType[] = new Array(8).fill(
-    {
-      id: "4034793",
-      name: "跟灯按弦超好玩碳纤维智能尤克里里",
-      price: 599,
-      picture: "https://yanxuan-item.nosdn.127.net/62107ce9769183757d9a425af9f503df.jpg",
-      payCount: 0
+  recommendList: GoodsItemType[] = []
+  getRecommend = async () => {
+    try {
+      const res = await getRecommendAPI()
+      this.recommendList = res.data.result
+    } catch (e) {
+      Log.error(e)
     }
-  )
+  }
+
+  aboutToAppear() {
+    this.getRecommend()
+  }
 
   build() {
     Column() {

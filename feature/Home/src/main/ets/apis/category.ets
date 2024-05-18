@@ -1,3 +1,5 @@
+import { fetchData } from '@HC/common/src/main/ets/utils/http'
+
 export interface CategoryType {
   children: Child[]
   goods: Good[]
@@ -21,4 +23,10 @@ export interface Good {
   orderNum: null
   picture: string
   price: null | string
+}
+
+export const getCategoryListAPI = () => {
+  return fetchData<CategoryType[]>({
+    url: '/home/category/head'
+  })
 }

@@ -1,14 +1,11 @@
-import { CategoryType } from '../apis/category'
+import { Log } from '@abner/log'
+import { CategoryType, getCategoryListAPI } from '../apis/category'
 
 @Component
 export struct HomeCategory {
   // 获取分类
   @State
-  categoryList: CategoryType[] = new Array(6).fill({
-    id: "1181622001",
-    name: "气质女装",
-    picture: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meikou/c1/qznz.png"
-  })
+  categoryList: CategoryType[] = []
   // 背景颜色数组
   @State bgColorList: string[] = [
     '#faf7f0',
@@ -20,6 +17,18 @@ export struct HomeCategory {
     '#f9ecf1',
     '#dedfe7',
   ]
+  GetCategoryList = async () => {
+    try {
+      const res = await getCategoryListAPI()
+      this.categoryList = res.data.result
+    } catch (e) {
+      Log.error(e)
+    }
+  }
+
+  aboutToAppear(): void {
+    this.GetCategoryList()
+  }
 
   build() {
     Row() {

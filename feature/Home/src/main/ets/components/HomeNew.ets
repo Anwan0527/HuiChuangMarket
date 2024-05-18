@@ -1,17 +1,23 @@
-import { NewGoodsItemType } from '../apis/new'
+import { Log } from '@abner/log'
+import { getNewGoodsListAPI, NewGoodsItemType } from '../apis/new'
 
 @Entry
 @Component
 export struct HomeNew {
   @State
-  newGoodsList: NewGoodsItemType[] = new Array(4).fill({
-    id: "4034793",
-    name: "跟灯按弦超好玩碳纤维智能尤克里里",
-    desc: "指板亮灯，指引按弦。可视化学习，更高效！还有更多游戏闯关，超有乐趣，不知不觉学会弹琴。",
-    price: "599.00",
-    picture: "https://yanxuan-item.nosdn.127.net/62107ce9769183757d9a425af9f503df.jpg",
-    orderNum: 695
-  })
+  newGoodsList: NewGoodsItemType[] = []
+  getNewGoodsList = async () => {
+    try {
+      const res = await getNewGoodsListAPI()
+      this.newGoodsList = res.data.result
+    } catch (e) {
+      Log.error(e)
+    }
+  }
+
+  aboutToAppear() {
+    this.getNewGoodsList()
+  }
 
   build() {
     // 新鲜好物

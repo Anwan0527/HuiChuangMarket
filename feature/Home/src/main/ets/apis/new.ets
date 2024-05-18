@@ -1,3 +1,5 @@
+import { fetchData } from '@HC/common/src/main/ets/utils/http';
+
 export interface NewGoodsItemType {
   desc: string;
   id: string;
@@ -5,4 +7,10 @@ export interface NewGoodsItemType {
   orderNum: number;
   picture: string;
   price: string;
+}
+
+export const getNewGoodsListAPI = () => {
+  return fetchData<NewGoodsItemType[]>({
+    url: '/home/new'
+  })
 }
