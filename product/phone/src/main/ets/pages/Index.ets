@@ -2,15 +2,24 @@ import { MainPage as Home } from '@CH/home'
 import { MainPage as Category } from '@CH/category'
 import { MainPage as My } from '@CH/My'
 import { MainPage as Cart } from '@CH/Cart'
+import { mediaquery } from '@kit.ArkUI'
 
 
 @Entry
 @Component
 struct Index {
   @State activeIndex: number = 0
+  @State island: boolean = false
+  listenerScreen = mediaquery.matchMediaSync('(orientation: landscape)')
+
+  aboutToAppear() {
+    this.listenerScreen.on('change', (mediaQueryResult) => {
+      this.island = mediaQueryResult.matches
+    })
+  }
 
   build() {
-    Tabs({ barPosition: BarPosition.End, index: this.activeIndex }) {
+    Tabs({ barPosition: this.island ? BarPosition.Start : BarPosition.End, index: this.activeIndex }) {
       TabContent() {
         Home()
       }
@@ -36,6 +45,7 @@ struct Index {
       .tabBar(this.TabBarBuilder('我的', $r("app.media.ic_public_my_normal"), $r("app.media.ic_public_my_actived"), 3))
     }
     .barMode(BarMode.Fixed)
+    .vertical(this.island)
     .scrollable(false)
   }
 

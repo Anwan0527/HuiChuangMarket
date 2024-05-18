@@ -12,7 +12,7 @@ export struct GridRowList {
 
   build() {
     GridRow({
-      columns: 2,
+      columns: { sm: 2, md: 4 },
       gutter: 8
     }) {
       ForEach(this.list, (goods: GoodsItemType) => {
