@@ -54,9 +54,11 @@ struct SearchResultPage {
   build() {
     Column() {
       this.Nav()
-      GridRowList({
-        list: this.SearchList
-      })
+      Scroll() {
+        GridRowList({
+          list: this.SearchList
+        })
+      }
     }
 
   }
