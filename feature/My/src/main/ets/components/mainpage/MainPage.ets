@@ -1,3 +1,4 @@
+import { UserType } from '@CH/common/Index'
 import { router } from '@kit.ArkUI'
 
 interface ListItem {
@@ -20,6 +21,7 @@ export struct MainPage {
       page: 'CustomerServicePage'
     }
   ]
+  @StorageLink('userInfo') userInfo: UserType = {} as UserType
 
   build() {
     Column() {
@@ -62,15 +64,16 @@ export struct MainPage {
   UserInfoBuilder() {
     Row() {
       Row() {
-        Image('')
+        Image(this.userInfo.avatar)
           .width(40)
           .aspectRatio(1)
           .borderRadius(20)
 
       }.backgroundColor('#D9D9D9').borderRadius(20)
 
-      if (false) {
-        Text('张三')
+      if (this.userInfo?.token) {
+        
+        Text(this.userInfo.account)
           .fontSize(18)
           .fontWeight(500)
           .margin({ left: 20 })

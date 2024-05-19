@@ -12,4 +12,10 @@ export { MyTabs } from './src/main/ets/components/MyTabs'
 
 export { CountDown } from './src/main/ets/components/CountDown'
 
+export { AudioManager } from './src/main/ets/components/manager/AudioManager'
+
+export { SpeechManager } from './src/main/ets/components/manager/SpeechManager'
+
+export { Auth, UserType, USER_KEY } from './src/main/ets/utils/Auth'
+
 export * from './src/main/ets/components/CheckLandscape'
