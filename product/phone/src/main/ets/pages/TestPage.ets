@@ -1,4 +1,5 @@
-import { mediaquery } from '@kit.ArkUI'
+import { CountDown, LoadingCom, MyTabs } from '@CH/common/Index'
+import { mediaquery, promptAction } from '@kit.ArkUI'
 
 export interface OrientationState {
   isLand: boolean
@@ -31,17 +32,17 @@ struct CheckLandscape {
 @Entry
 @Component
 struct TestPage {
-  @Builder
-  RenderText(state: OrientationState) {
-    Text(state.isLand.toString())
-  }
-
   build() {
-    Row() {
-      CheckLandscape({
-        Solt: (State) => {
-          this.RenderText(State)
-        }
+    Column() {
+      MyTabs({
+        list: [{ title: 'tab1', id: 1 }, { title: 'tab2', id: 2 }],
+        onChange: (tab) => {
+          promptAction.showToast({
+            message: JSON.stringify(tab.id)
+          })
+        },
+        activeBgColor: '#000',
+        activeFontColor: '#fff'
       })
     }
   }

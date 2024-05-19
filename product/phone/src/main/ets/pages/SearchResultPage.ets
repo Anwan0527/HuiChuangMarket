@@ -1,4 +1,4 @@
-import { GoodsItemType, GridRowList } from '@CH/common/Index'
+import { GoodsItemType, GridRowList, TitleBar } from '@CH/common/Index'
 import { router } from '@kit.ArkUI'
 import { getSearchListAPI, Item } from '../api/search'
 
@@ -20,24 +20,6 @@ struct SearchResultPage {
     this.SearchList = res.data.result.pageData.items
   }
 
-  @Builder
-  Nav() {
-    Row() {
-      //<
-      Image($r('app.media.arrow_left'))
-        .margin({
-          left: 17
-        })
-        .width(24)
-        .onClick(() => {
-          router.back()
-        })
-      Text(this.keyword)
-        .layoutWeight(1)
-        .width("100%")
-    }
-  }
-
   aboutToAppear() {
     const params = router.getParams() as RouteParams
     if (params) {
@@ -53,13 +35,18 @@ struct SearchResultPage {
 
   build() {
     Column() {
-      this.Nav()
+      TitleBar({
+        title: this.keyword,
+        onBack: () => {
+          router.back()
+        },
+        showBack: true
+      })
       Scroll() {
         GridRowList({
           list: this.SearchList
         })
       }
     }
-
   }
 }
