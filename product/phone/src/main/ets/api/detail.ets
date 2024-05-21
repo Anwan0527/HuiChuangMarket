@@ -98,9 +98,9 @@ export interface SkusSpec {
 }
 
 export interface ResultSpec {
-  id?: string;
-  name?: string;
-  values?: Value[];
+  id: string;
+  name: string;
+  values: Value[];
 }
 
 export interface Value {

@@ -1,7 +1,8 @@
 import { Log } from '@abner/log'
 import { router } from '@kit.ArkUI'
 import { getGoodsDetail, Result as DetailResult } from '../api/detail'
-
+import { SkuCom } from '@fine/sku-component'
+import { LoadingCom } from '@CH/common/Index'
 
 interface RouteParams {
   id: string
@@ -13,12 +14,14 @@ const bannerList: string[] =
 @Entry
 @Component
 struct GoodsDetailPage {
+  listScroller: Scroller = new Scroller()
   tabList: string[] = ['商品', '详情']
   // 有意识的区分响应式状态和普通状态
   // 每一个@State修饰的属性都是需要时间处理成响应式的  影响初始化的性能
   @State activeIndex: number = 0
   swiperController: SwiperController = new SwiperController()
   @State swipperIndex: number = 0
+  @State count: number = 0
   @State goodsDetail: DetailResult | null = null
   getGoodsDetail = async (id: string) => {
     try {
@@ -27,6 +30,12 @@ struct GoodsDetailPage {
       Log.info(this.goodsDetail)
     } catch (e) {
     }
+  }
+  @State showSku: boolean = false
+  skuId: string | null = null
+  skuChange = (skuId: string | null) => {
+    this.skuId = skuId
+    Log.info(this.skuId)
   }
 
   aboutToAppear(): void {
@@ -76,104 +85,135 @@ struct GoodsDetailPage {
       }
       .height(56)
 
-      Scroll() {
-        Column() {
-          Stack({ alignContent: Alignment.BottomEnd }) {
-            // 主体内容区域
-            Swiper(this.swiperController) {
-              ForEach(
-                this.goodsDetail?.mainPictures,
-                (url: string) => {
-                  Image(url).aspectRatio(360 / 310)
-                })
-            }
-            .loop(true)
-            .autoPlay(true)
-            .indicator(false)
-            .onChange((index) => {
-              this.swipperIndex = index
-            })
 
-            Row() {
-              Text(`${this.swipperIndex + 1}/${this.goodsDetail?.mainPictures.length}`)
-                .fontColor('#A6A3AD')
-                .fontSize(11)
-            }
-            .width(36)
-            .height(16)
-            .borderRadius(10)
-            .backgroundColor('#F5F4F9')
-            .margin({ bottom: 10, right: 10 })
-            .justifyContent(FlexAlign.Center)
-          }
-
-          // 商品信息区域
+      Column() {
+        Scroll() {
           Column() {
-            // 价格
-            Text(`${this.goodsDetail?.price}`).fontSize(25).fontColor('#191919')
-            // 标题
-            Text(this.goodsDetail?.name)
-              .lineHeight(20)
-              .fontSize(15)
-              .fontColor('#434343')
+            List({
+              scroller: this.listScroller
+            }) {
+              ListItem() {
+                Column() {
+                  Stack({ alignContent: Alignment.BottomEnd }) {
+                    // 主体内容区域
+                    Swiper(this.swiperController) {
+                      ForEach(
+                        this.goodsDetail?.mainPictures,
+                        (url: string) => {
+                          Image(url).aspectRatio(360 / 310)
+                        })
+                    }
+                    .loop(true)
+                    .autoPlay(true)
+                    .indicator(false)
+                    .onChange((index) => {
+                      this.swipperIndex = index
+                    })
 
-            Text('保暖升级，舒适亲肤')
-              .fontSize(12)
-              .lineHeight(20)
-              .fontColor('#A6A3AD')
+                    Row() {
+                      Text(`${this.swipperIndex + 1}/${this.goodsDetail?.mainPictures.length}`)
+                        .fontColor('#A6A3AD')
+                        .fontSize(11)
+                    }
+                    .width(36)
+                    .height(16)
+                    .borderRadius(10)
+                    .backgroundColor('#F5F4F9')
+                    .margin({ bottom: 10, right: 10 })
+                    .justifyContent(FlexAlign.Center)
+                  }
 
-            Row() {
-              Text('已选')
-                .fontSize(12)
-              Text('请选择')
-                .margin({ left: 16 })
-                .fontSize(12)
-                .fontColor('#A6A3AD')
-            }
-            .width('100%')
-            .height(40)
-            .alignItems(VerticalAlign.Center)
-            .border({
-              width: {
-                bottom: 1
-              },
-              color: '#eee'
-            })
+                  // 商品信息区域
+                  Column() {
+                    // 价格
+                    Text(`${this.goodsDetail?.price}`).fontSize(25).fontColor('#191919')
+                    // 标题
+                    Text(this.goodsDetail?.name)
+                      .lineHeight(20)
+                      .fontSize(15)
+                      .fontColor('#434343')
 
-            Text('无忧退货 · 快速退款 · 免费包邮')
-              .padding({ top: 10, bottom: 10 })
-              .fontSize(12)
-              .fontColor('#191919')
-          }
-          .borderRadius(10)
-          .padding({ left: 8, right: 8, top: 20 })
-          .alignItems(HorizontalAlign.Start)
-          .backgroundColor('#fff')
-          .margin(8)
+                    Text('保暖升级，舒适亲肤')
+                      .fontSize(12)
+                      .lineHeight(20)
+                      .fontColor('#A6A3AD')
 
-          // 详情区域
-          Column() {
-            Row() {
-              Text('商品信息').fontSize(12).fontWeight(700)
-            }
-            .width('100%')
-            .height(56)
-            .padding({ left: 10 })
+                    Row() {
+                      Text('已选')
+                        .fontSize(12)
+                      Text('请选择')
+                        .margin({ left: 16 })
+                        .fontSize(12)
+                        .fontColor('#A6A3AD')
+                        .onClick(() => {
+                          this.showSku = true
+                        })
+                        .bindSheet(
+                          $$this.showSku,
+                          this.skuBuilder(),
+                          {
+                            height: SheetSize.FIT_CONTENT, // 适应内容
+                            backgroundColor: '#fff',
+                          }
+                        )
+                    }
+                    .width('100%')
+                    .height(40)
+                    .alignItems(VerticalAlign.Center)
+                    .border({
+                      width: {
+                        bottom: 1
+                      },
+                      color: '#eee'
+                    })
 
-            Column() {
-              ForEach(
-                this.goodsDetail?.details.pictures,
-                (url: string) => {
-                  Image(url).width('100%')
+                    Text('无忧退货 · 快速退款 · 免费包邮')
+                      .padding({ top: 10, bottom: 10 })
+                      .fontSize(12)
+                      .fontColor('#191919')
+                  }
+                  .borderRadius(10)
+                  .padding({ left: 8, right: 8, top: 20 })
+                  .alignItems(HorizontalAlign.Start)
+                  .backgroundColor('#fff')
+                  .margin(8)
                 }
-              )
+              }
+
+              ListItem() {
+                // 详情区域
+                Column() {
+                  Row() {
+                    Text('商品信息').fontSize(12).fontWeight(700)
+                  }
+                  .width('100%')
+                  .height(56)
+                  .padding({ left: 10 })
+
+                  Column() {
+                    ForEach(
+                      this.goodsDetail?.details.pictures,
+                      (url: string) => {
+                        Image(url).width('100%')
+                      }
+                    )
+                  }
+                }
+                .width('100%')
+                .backgroundColor('#fff')
+                .visibility(this.goodsDetail?.details.pictures.length ? Visibility.Visible : Visibility.None)
+              }
             }
+            .width("100%")
+            .height("100%")
+            .onScrollIndex(index => {
+              this.activeIndex = index
+            })
           }
-          .width('100%')
-          .backgroundColor('#fff')
-          .visibility(this.goodsDetail?.details.pictures.length ? Visibility.Visible : Visibility.None)
         }
       }
+      .layoutWeight(1)
+      .backgroundColor('#F5F4F9')
 
     }
   }
@@ -189,6 +229,96 @@ struct GoodsDetailPage {
     .justifyContent(FlexAlign.Center)
     .onClick(() => {
       this.activeIndex = index
+      this.listScroller.scrollToIndex(this.activeIndex)
     })
+  }
+
+  @Builder
+  skuBuilder() {
+    Column() {
+      Column() {
+        // 内容区域
+        Column() {
+          if (this.goodsDetail !== null) {
+            // 商品图片和价格
+            Row() {
+              // 商品图
+              Image(this.goodsDetail.mainPictures[0]).width(90).aspectRatio(1)
+              // 商品价格
+              Text('￥' + this.goodsDetail.price)
+                .margin({
+                  left: 20
+                })
+                .fontSize(22)
+                .fontWeight(700)
+            }
+            .height(90)
+            .width('100%')
+            .margin({
+              top: 20,
+              bottom: 20
+            })
+            .justifyContent(FlexAlign.Start)
+            .alignItems(VerticalAlign.Bottom)
+
+            // sku组件
+            SkuCom({
+              goods: {
+                skus: this.goodsDetail.skus,
+                specs: this.goodsDetail.specs,
+              },
+              onSkuChange: (id) => {
+                this.skuChange(id)
+              }
+            })
+
+            // 数量区域
+            Row() {
+              Row() {
+                Text('数量').margin({ right: 10 }).fontSize(13).fontWeight(500)
+                Text(`库存${this.goodsDetail.inventory}`).fontSize(12)
+              }
+
+              Counter() {
+                Text(this.count.toString()).fontSize(12)
+              }
+              .size({ height: 28 })
+              .onInc(() => {
+                this.count++
+              })
+              .onDec(() => {
+                if (this.count === 0) {
+                  return
+                }
+                this.count--
+              })
+            }
+            .width('100%')
+            .justifyContent(FlexAlign.SpaceBetween)
+          }
+        }
+        .width('100%')
+        .layoutWeight(1)
+
+        // 数量按钮区域
+        Row() {
+          Row() {
+            Text('加入购物车').fontColor('#fff').fontSize(14)
+          }
+          .height('100%')
+          .backgroundColor('#191919')
+          .justifyContent(FlexAlign.Center)
+          .layoutWeight(1)
+          .borderRadius(18)
+        }
+        .height(36)
+      }
+      .width('100%')
+      .padding({ left: 16, right: 16, bottom: 16 })
+      .justifyContent(FlexAlign.SpaceBetween)
+      .backgroundColor('#fff')
+    }
+    .height('100%')
+    .justifyContent(FlexAlign.End)
   }
 }
