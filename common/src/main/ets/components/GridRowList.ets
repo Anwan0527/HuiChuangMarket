@@ -1,3 +1,5 @@
+import { router } from '@kit.ArkUI';
+
 export interface GoodsItemType {
   desc: string;
   id: string;
@@ -72,6 +74,14 @@ export struct GridRowList {
           .backgroundColor('#fff')
           .borderRadius(8)
         }
+        .onClick(() => {
+          router.pushUrl({
+            url: 'pages/GoodsDetailPage',
+            params: {
+              id: goods.id
+            }
+          })
+        })
       })
     }
   }

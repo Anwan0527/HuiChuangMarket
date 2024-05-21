@@ -4,6 +4,7 @@
     "pages/TestPage",
     "pages/SearchPage",
     "pages/SearchResultPage",
-    "pages/LoginPage"
+    "pages/LoginPage",
+    "pages/GoodsDetailPage"
   ]
 }
