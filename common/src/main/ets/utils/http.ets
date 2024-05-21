@@ -1,4 +1,13 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from '@ohos/axios'
+import { Auth } from './Auth'
+import { promptAction, router } from '@kit.ArkUI'
+
+// 定义一个自己业务的错误接口类型
+interface APIErrorType {
+  message: string
+  msg: string
+  code: string
+}
 
 //实例化
 const httpInstance = axios.create({
@@ -8,15 +17,38 @@ const httpInstance = axios.create({
 //拦截器
 //token
 httpInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = Auth.getUser()?.token
+  if (token) {
+    config.headers.Authorization = token
+  }
   return config
 }, (error: AxiosError) => {
   return Promise.reject(error)
 })
 
-//相应拦截器
+
+// 添加响应拦截器
 httpInstance.interceptors.response.use((response: AxiosResponse) => {
+  // 对响应数据做点什么
   return response
-}, (error: AxiosError) => {
+}, (error: AxiosError<APIErrorType>) => {
+  // 对响应错误做点什么
+  if (error.response) {
+    promptAction.showToast({
+      message: error.response.data.message,
+      duration: 2000
+    })
+
+    // token失效跳转到登录页
+    if (error.response.status === 401) {
+      // 清除本地用户信息
+      Auth.delUser()
+      // 跳转到登录页
+      router.pushUrl({
+        url: 'pages/LoginPage'
+      })
+    }
+  }
   return Promise.reject(error)
 })
 

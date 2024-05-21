@@ -1,5 +1,7 @@
-import { UserType } from '@CH/common/Index'
+import { GoodsItemType, GridRowList, UserType, USER_KEY } from '@CH/common/Index'
 import { router } from '@kit.ArkUI'
+import { getLikeListAPI, Item } from '../../api'
+import { Log } from '@abner/log'
 
 interface ListItem {
   name: string
@@ -21,7 +23,19 @@ export struct MainPage {
       page: 'CustomerServicePage'
     }
   ]
-  @StorageLink('userInfo') userInfo: UserType = {} as UserType
+  // 获取全局的用户数据
+  @StorageLink(USER_KEY) userInfo: UserType = {} as UserType
+  @State likeList: GoodsItemType[] = []
+  getLikeList = async () => {
+    const res = await getLikeListAPI()
+
+    Log.info(res.data.result.items)
+    this.likeList = res.data.result.items
+  }
+
+  aboutToAppear(): void {
+    this.getLikeList()
+  }
 
   build() {
     Column() {
@@ -72,7 +86,7 @@ export struct MainPage {
       }.backgroundColor('#D9D9D9').borderRadius(20)
 
       if (this.userInfo?.token) {
-        
+
         Text(this.userInfo.account)
           .fontSize(18)
           .fontWeight(500)
@@ -139,6 +153,12 @@ export struct MainPage {
   GuessListBuilder() {
     Column() {
       // 猜你喜欢内容
+      Scroll() {
+        // 猜你喜欢内容
+        GridRowList({
+          list: this.likeList
+        })
+      }
     }
     .padding({ left: 10, right: 10 })
     .layoutWeight(1)

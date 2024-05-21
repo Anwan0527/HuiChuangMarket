@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "0000001C8F11C0353005C623D9CBD2B37181AFB1C48D6CF5BF330CDF56156A7360D59CC693C050A0D9BF336F",
+          "certpath": "C:/Users/anwan/DevEcoStudioProjects/huichuang/Key/Huichuang.cer",
+          "keyAlias": "Huichuang",
+          "keyPassword": "0000001C15ABD79629ADFDA2FB95767493D34F4576B7335D91D6A176628D012E1EF8AE6931E1E2751AAD6072",
+          "profile": "C:/Users/anwan/DevEcoStudioProjects/huichuang/Key/HuichuangDebug.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:/Users/anwan/DevEcoStudioProjects/huichuang/Key/Huichuang.p12"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",

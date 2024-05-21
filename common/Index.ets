@@ -16,6 +16,8 @@ export { AudioManager } from './src/main/ets/components/manager/AudioManager'
 
 export { SpeechManager } from './src/main/ets/components/manager/SpeechManager'
 
+export { HuaweiLoginManager } from './src/main/ets/components/manager/HuaweiLoginManager'
+
 export { Auth, UserType, USER_KEY } from './src/main/ets/utils/Auth'
 
 export * from './src/main/ets/components/CheckLandscape'

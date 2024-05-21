@@ -1,6 +1,6 @@
-import { Auth, TitleBar,  } from '@CH/common';
+import { Auth, HuaweiLoginManager, TitleBar, } from '@CH/common';
 import { promptAction, router } from '@kit.ArkUI';
-import { loginAPI, LoginReqDataType } from '../api/login';
+import { huaweiLoginAPI, loginAPI, LoginReqDataType } from '../api/login';
 
 interface LoginFormType {
   account: string,
@@ -91,8 +91,30 @@ struct LoginPage {
         .margin({
           top: 4
         })
+
+        Row() {
+          Image($r('app.media.ic_public_login_huawei_icon'))
+        }
+        .width(40)
+        .height(40)
+        .onClick(() => {
+          HuaweiLoginManager.requestLogin(getContext(this), async (code) => {
+            if (code) {
+              const res = await huaweiLoginAPI(code)
+              // 全局存入用户信息
+              Auth.setUser(res.data.result)
+              // 跳转到应用首页
+              router.pushUrl({
+                url: 'pages/Index'
+              })
+              promptAction.showToast({
+                message: '登录成功'
+              })
+            }
+          })
+        })
       }
-      .alignItems(HorizontalAlign.Start)
+      .alignItems(HorizontalAlign.Center)
       .padding({
         left: 24,
         right: 24,

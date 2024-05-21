@@ -10,6 +10,10 @@ export interface UserType {
 export const USER_KEY = 'userInfo'
 
 export class Auth {
+  static initLocalUser() {
+    PersistentStorage.persistProp(USER_KEY, {})
+  }
+
   // 存数据
   static setUser(user: UserType) {
     AppStorage.setOrCreate(USER_KEY, user)

@@ -9,13 +9,18 @@ import { MainPage as My } from '@CH/My'
 // 2. 比较第一步记录下来的index和每一项的index是否相等 如果相等，当前项就应该被激活 [ 0, 1, 2, 3 ]
 // 3. 把找到的那个激活项通过样式的变化显示到UI上
 
-import { OrientationState, CheckLandscape } from '@CH/common'
+import { OrientationState, CheckLandscape, Auth } from '@CH/common'
+
 
 @Entry
 @Component
 struct Index {
   @State activeIndex: number = 0
   @State isLand: boolean = false
+
+  aboutToAppear() {
+    Auth.initLocalUser()
+  }
 
   @Builder
   TabsContent(landState: OrientationState) {
