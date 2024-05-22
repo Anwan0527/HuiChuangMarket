@@ -1,8 +1,9 @@
 import { Log } from '@abner/log'
-import { router } from '@kit.ArkUI'
-import { getGoodsDetail, Result as DetailResult } from '../api/detail'
+import { promptAction, router } from '@kit.ArkUI'
+import { addCartAPI, getGoodsDetail, Result as DetailResult } from '../api/detail'
 import { SkuCom } from '@fine/sku-component'
 import { LoadingCom } from '@CH/common/Index'
+import { emitter } from '@kit.BasicServicesKit'
 
 interface RouteParams {
   id: string
@@ -33,6 +34,22 @@ struct GoodsDetailPage {
   }
   @State showSku: boolean = false
   skuId: string | null = null
+  addCart = async () => {
+    // 判断当前是否选择合法的商品规格 + 数量是否大于零
+    if (this.skuId === null || this.count === 0) {
+      promptAction.showToast({ message: '请选择合法和规格和数量' })
+    } else {
+      // 添加购物车操作
+      try {
+        await addCartAPI(this.skuId, this.count)
+        promptAction.showToast({ message: '添加购物车成功' })
+        // 通知购物车列表进行更新
+        emitter.emit('updateCartList')
+      } catch (e) {
+        Log.error(e)
+      }
+    }
+  }
   skuChange = (skuId: string | null) => {
     this.skuId = skuId
     Log.info(this.skuId)
@@ -267,8 +284,9 @@ struct GoodsDetailPage {
                 skus: this.goodsDetail.skus,
                 specs: this.goodsDetail.specs,
               },
-              onSkuChange: (id) => {
-                this.skuChange(id)
+              onSkuChange: (skuId: string) => {
+                this.skuChange(skuId)
+                this.skuId = skuId
               }
             })
 
@@ -305,6 +323,9 @@ struct GoodsDetailPage {
           Row() {
             Text('加入购物车').fontColor('#fff').fontSize(14)
           }
+          .onClick(() => {
+            this.addCart()
+          })
           .height('100%')
           .backgroundColor('#191919')
           .justifyContent(FlexAlign.Center)

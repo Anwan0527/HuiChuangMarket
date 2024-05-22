@@ -11,16 +11,13 @@ import { MainPage as My } from '@CH/My'
 
 import { OrientationState, CheckLandscape, Auth } from '@CH/common'
 
+Auth.initLocalUser()
 
 @Entry
 @Component
 struct Index {
   @State activeIndex: number = 0
   @State isLand: boolean = false
-
-  aboutToAppear() {
-    Auth.initLocalUser()
-  }
 
   @Builder
   TabsContent(landState: OrientationState) {

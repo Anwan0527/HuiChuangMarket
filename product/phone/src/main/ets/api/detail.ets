@@ -117,3 +117,15 @@ export const getGoodsDetail = (id: string = '1750713979560263686') => {
     }
   })
 }
+
+
+export const addCartAPI = (skuId: string, count: number) => {
+  return fetchData<null>({
+    url: '/member/cart',
+    method: 'POST',
+    data: {
+      skuId,
+      count
+    }
+  })
+}
