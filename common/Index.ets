@@ -20,4 +20,6 @@ export { HuaweiLoginManager } from './src/main/ets/components/manager/HuaweiLogi
 
 export { Auth, UserType, USER_KEY } from './src/main/ets/utils/Auth'
 
+export { parseQueryParams } from './src/main/ets/utils/ParseUrl'
+
 export * from './src/main/ets/components/CheckLandscape'

@@ -9,6 +9,7 @@
     "pages/AddressMangePage",
     "pages/AddressCreatePage",
     "pages/OrderConfirmPage",
-    "pages/PayPage"
+    "pages/PayPage",
+    "pages/AliPayResultPage"
   ]
 }
