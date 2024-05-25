@@ -5,6 +5,10 @@
     "pages/SearchPage",
     "pages/SearchResultPage",
     "pages/LoginPage",
-    "pages/GoodsDetailPage"
+    "pages/GoodsDetailPage",
+    "pages/AddressMangePage",
+    "pages/AddressCreatePage",
+    "pages/OrderConfirmPage",
+    "pages/PayPage"
   ]
 }

@@ -1,107 +1,80 @@
-import { LogOptions } from '@abner/log'
+import { reminderAgentManager } from '@kit.BackgroundTasksKit'
+import { notificationManager } from '@kit.NotificationKit'
+import { BusinessError } from '@kit.BasicServicesKit'
+import { wantAgent, WantAgent } from '@kit.AbilityKit'
 
-interface Item {
-  name: string
-  age: number
-}
-
-const personList: Item[] = [
-  { name: '张三', age: 20 },
-  { name: '李四', age: 30 },
-  { name: '王五', age: 40 },
-  { name: '小李', age: 50 },
-  { name: '小王', age: 60 },
-]
-
-//要求实现一个函数可以过滤得到age大于30的所有项
-function getAge30(list: Item[]) {
-  // 实现逻辑
-  // 方法1:return list.filter(item => item.age > 30)
-  const newlist: Item[] = []
-  for (let i = 0; i < list.length; i++) {
-    if (list[i].age > 30) {
-      newlist.push(list[i])
-    }
-  }
-  return newlist
-}
-
-//要求实现一个函数，可以计算出来所有人的年龄之和
-function calcAge(list: Item[]) {
-  // 实现逻辑
-  // 方法1:return list.reduce((sum, item) => sum + item.age, 0)
-  let sum: number = 0
-  for (let i = 0; i < list.length; i++) {
-    sum = sum + list[i].age
-  }
-  return sum
-}
-
-type trigFunc = (x: number) => number
-
-function myMap(list: number[], f: trigFunc) {
-  // 方法1:return list.map(item => f(item))
-  let newList: number[] = []
-  for (let i = 0; i < list.length; i++) {
-    newList.push(f(list[i]))
-  }
-  return newList
-}
-
-function myMap2<T, U>(list: T[], f: (item: T) => U): U[] {
-  return list.map(f);
-
-}
-
-const newList = getAge30(personList)
-// console.log("", JSON.stringify(newList))
-const allAge = calcAge(personList)
-
-// console.log("", JSON.stringify(allAge)) // 200
-
-const newList2 = myMap([1, 2, 3], (item) => {
-  return item * 2
-}) // newList = [2, 4, 6]
-
-// console.log("", JSON.stringify(newList2))
-
-// // 支持number
-const newList3 = myMap2([1, 2, 3], (item) => {
-  return item * 2
-})
-console.log("", JSON.stringify(newList3))
-// 支持string
-const newList4 = myMap2(['1', '2', '3'], (item) => {
-  return item + '4'
-})
-console.log("", JSON.stringify(newList4))
-
-// newList = ['14','24', '34']
 @Entry
 @Component
-struct TestPage {
-  mList: Array<string> = [
-    "YYL", "TWT", "TWT", "TWT", "TWT",
-    "YYL", "TWT", "TWT", "TWT", "TWT",
-    "YYL", "TWT", "TWT", "TWT", "TWT",
-    "YYL", "TWT", "TWT", "TWT", "TWT",
-    "YYL", "TWT", "TWT", "TWT", "YYL"
-  ]
-
+struct test {
   build() {
     Column() {
-      List() {
-        ForEach(this.mList, (text: string) => {
-          ListItem() {
-            Text(text)
-              .fontSize(50)
+      Button('权限').onClick(() => {
+        notificationManager.requestEnableNotification()
+      })
+      Button('通知')
+        .onClick(() => {
+          let wantAgentObj: WantAgent; // 用于保存创建成功的wantAgent对象，后续使用其完成触发的动作。
+
+          // 通过WantAgentInfo的operationType设置动作类型
+          let wantAgentInfo: wantAgent.WantAgentInfo = {
+            wants: [
+              {
+                deviceId: '',
+                bundleName: 'com.lanyin.huichuang',
+                abilityName: 'EntryAbility',
+                action: '',
+                entities: [],
+                uri: 'pages/Index',
+                parameters: {}
+              }
+            ],
+            operationType: wantAgent.OperationType.START_ABILITY,
+            requestCode: 0,
+            wantAgentFlags: [wantAgent.WantAgentFlags.CONSTANT_FLAG]
+          };
+          let targetReminderAgent: reminderAgentManager.ReminderRequestAlarm = {
+            reminderType: reminderAgentManager.ReminderType.REMINDER_TYPE_ALARM, // 提醒类型为闹钟类型
+            hour: 19, // 指明提醒的目标时刻
+            minute: 25, // 指明提醒的目标分钟
+            daysOfWeek: [4], // 指明每周哪几天需要重复提醒
+            actionButton: [// 设置弹出的提醒通知信息上显示的按钮类型和标题
+              {
+                title: 'close',
+                type: reminderAgentManager.ActionButtonType.ACTION_BUTTON_TYPE_CLOSE
+              },
+              {
+                title: 'snooze',
+                type: reminderAgentManager.ActionButtonType.ACTION_BUTTON_TYPE_SNOOZE
+              },
+            ],
+            wantAgent: {
+              // 点击提醒通知后跳转的目标UIAbility信息
+              pkgName: 'com.lanyin.huichuang',
+              abilityName: 'EntryAbility',
+            },
+            maxScreenWantAgent: {
+              // 全屏显示提醒到达时自动拉起的目标UIAbility信息
+              pkgName: 'com.lanyin.huichuang',
+              abilityName: 'EntryAbility'
+            },
+            ringDuration: 5, // 指明响铃时长（单位：秒）
+            snoozeTimes: 2, // 指明延迟提醒次数
+            timeInterval: 5, // 执行延迟提醒间隔（单位：秒）
+            title: 'this is title', // 指明提醒标题
+            content: 'this is content', // 指明提醒内容
+            expiredContent: 'this reminder has expired', // 指明提醒过期后需要显示的内容
+            snoozeContent: 'remind later', // 指明延迟提醒时需要显示的内容
+            notificationId: 99, // 指明提醒使用的通知的ID号，相同ID号的提醒会覆盖
+            slotType: notificationManager.SlotType.SOCIAL_COMMUNICATION // 指明提醒的Slot类型
           }
+          reminderAgentManager.publishReminder(targetReminderAgent).then((res: number) => {
+            console.info('Succeeded in publishing reminder. ');
+            let reminderId: number = res; // 发布的提醒ID
+          }).catch((err: BusinessError) => {
+            console.error(`Failed to publish reminder. Code: ${err.code}, message: ${err.message}`);
+          })
         })
-      }
-      .width("100%")
-      .height("100%") //你没有的
     }
-    .width("100%")
-    .height("100%")
+
   }
 }

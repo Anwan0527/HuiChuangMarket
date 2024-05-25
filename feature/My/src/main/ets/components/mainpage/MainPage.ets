@@ -21,7 +21,11 @@ export struct MainPage {
       name: '在线客服',
       icon: $r("app.media.ic_my_servic"),
       page: 'CustomerServicePage'
-    }
+    }, {
+    name: '地址管理',
+    icon: $r("app.media.ic_my_servic"),
+    page: 'AddressMangePage'
+  }
   ]
   // 获取全局的用户数据
   @StorageLink(USER_KEY) userInfo: UserType = {} as UserType

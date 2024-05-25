@@ -1,7 +1,7 @@
 import { TitleBar } from '@CH/common/Index'
 import { Result as CartItemType, mockCartList } from '../../api'
 import { AlertDialog } from '@ohos.arkui.advanced.Dialog'
-import { promptAction } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
 import { Log } from '@abner/log'
 import { changeAllCartSelectedAPI, changeCartSelectedAPI, delCartAPI, getCartListAPI } from '../../api/cart'
 import { emitter } from '@kit.BasicServicesKit'
@@ -272,6 +272,11 @@ export struct MainPage {
           Button('提交订单')
             .backgroundColor('#FF2737')
             .fontSize(14)
+            .onClick(() => {
+              router.pushUrl({
+                url: 'pages/OrderConfirmPage'
+              })
+            })
         }
         .layoutWeight(1)
         .justifyContent(FlexAlign.SpaceBetween)
@@ -292,6 +297,7 @@ export struct MainPage {
         Text('删除').fontColor('#fff').fontSize(11).padding({ left: 10, right: 10 })
           .onClick(() => {
             this.delCart(cartItem.skuId)
+            // console.log('Log:', cartItem.skuId)
           })
       }
       .backgroundColor('#FF2737')
