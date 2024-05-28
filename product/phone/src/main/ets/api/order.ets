@@ -59,6 +59,60 @@ interface ReqType {
   addressId: string
 }
 
+export interface GetOrderReqType {
+  page: number
+  pageSize: number
+  orderState: 0 | 1 | 2 | 3 | 4 | 4 | 5 | 6
+}
+
+export interface OrderResult {
+  counts: number;
+  items: OrderItem[];
+  page: number;
+  pages: number;
+  pageSize: number;
+}
+
+export interface OrderItem {
+  countdown: number;
+  createTime: string;
+  id: string;
+  orderState: number;
+  payChannel: number;
+  payLatestTime: string;
+  payMoney: number | number;
+  payType: number;
+  postFee: number;
+  skus: Skus[];
+  totalMoney: number | number;
+  totalNum: number;
+}
+
+export interface Skus {
+  attrsText: string;
+  curPrice: number | number;
+  id: string;
+  image: string;
+  name: string;
+  properties: Property[];
+  quantity: number;
+  realPay: number | number;
+  spuId: string;
+  totalMoney: null;
+}
+
+export interface Property {
+  propertyMainName: string;
+  propertyValueName: string;
+}
+
+export const getOrderListAPI = (params: GetOrderReqType) => {
+  return fetchData<OrderResult>({
+    url: '/member/order',
+    params
+  })
+}
+
 export const createOrderAPI = (data: ReqType) => {
   return fetchData<OrderResultType>({
     url: '/member/order',
