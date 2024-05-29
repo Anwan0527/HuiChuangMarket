@@ -10,7 +10,7 @@ export { LoadingCom } from './src/main/ets/components/LoadingCom'
 
 export { MyTabs } from './src/main/ets/components/MyTabs'
 
-export { CountDown } from './src/main/ets/components/CountDown'
+export { CountDownCom } from './src/main/ets/components/CountDown'
 
 export { AudioManager } from './src/main/ets/components/manager/AudioManager'
 

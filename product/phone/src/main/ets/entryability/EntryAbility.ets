@@ -5,7 +5,11 @@ import { Log } from '@abner/log';
 import { Auth } from '@CH/common/Index';
 
 export default class EntryAbility extends UIAbility {
-  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+  // 存放拉起页地址
+  private selectPage: string = ''
+  private currentWindowStage: window.WindowStage | null = null
+
+  onCreate(want: Want, launchParam: AbilityConstant.LaunchParam) {
     Log.init({
       tag: "HC",
       domain: 0x0000,
@@ -14,7 +18,24 @@ export default class EntryAbility extends UIAbility {
       showLogLocation: true,
       logSize: 800
     })
+    if (want.parameters !== undefined) {
+      let params: Record<string, string> = JSON.parse(JSON.stringify(want.parameters))
+      this.selectPage = params.targetPage
+      console.log('当前selectPage:', this.selectPage)
+    }
+  }
 
+  onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
+    // 解析参数 把参数中的targetPage存入selectedPage中
+    if (want.parameters !== undefined) {
+      // 中间官方做了一层深度克隆
+      const params: Record<string, string> = JSON.parse(JSON.stringify(want.parameters))
+      this.selectPage = params.targetPage
+      // 手动触发onWindowStateCreate
+      if (this.currentWindowStage !== null) {
+        this.onWindowStageCreate(this.currentWindowStage)
+      }
+    }
   }
 
   onDestroy(): void {
@@ -24,13 +45,20 @@ export default class EntryAbility extends UIAbility {
   onWindowStageCreate(windowStage: window.WindowStage): void {
     // Main window is created, set main page for this ability
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
+    //是否有落地页情况下的打开地址
+    const targetPage = this.selectPage ? `pages/${this.selectPage}` : 'pages/Index'
+    console.log('当前targetPage:', targetPage)
+    //首次打开
+    if (this.currentWindowStage === null) {
+      this.currentWindowStage = windowStage
+    }
 
-    windowStage.loadContent('pages/Index', (err) => {
+    windowStage.loadContent(targetPage, (err, data) => {
       if (err.code) {
         hilog.error(0x0000, 'testTag', 'Failed to load the content. Cause: %{public}s', JSON.stringify(err) ?? '');
         return;
       }
-      hilog.info(0x0000, 'testTag', 'Succeeded in loading the content.');
+      hilog.info(0x0000, 'testTag', 'Succeeded in loading the content.Data: %{public}s', JSON.stringify(data) ?? '');
       Auth.initLocalUser()
     });
   }

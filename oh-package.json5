@@ -8,7 +8,9 @@
   "dependencies": {
     "@ohos/axios": "^2.2.0",
     "@abner/log": "^1.0.3",
-    "@fine/sku-component": "^0.0.1"
+    "@fine/sku-component": "^0.0.1",
+    "dayjs": "^1.11.7",
+    "@ohos/pulltorefresh": "^2.0.5"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.17",

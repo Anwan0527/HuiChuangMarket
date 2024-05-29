@@ -52,9 +52,26 @@
         }
       }
     ],
-   "metadata": [{
-      "name": 'client_id',
-      "value": '111022689'
-    }]
+    "metadata": [
+      {
+        "name": 'client_id',
+        "value": '111022689'
+      }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "PhoneFormAbility",
+        "srcEntry": "./ets/phoneformability/PhoneFormAbility.ets",
+        "label": "$string:PhoneFormAbility_label",
+        "description": "$string:PhoneFormAbility_desc",
+        "type": "form",
+        "metadata": [
+          {
+            "name": "ohos.extension.form",
+            "resource": "$profile:form_config"
+          }
+        ]
+      }
+    ]
   }
 }
