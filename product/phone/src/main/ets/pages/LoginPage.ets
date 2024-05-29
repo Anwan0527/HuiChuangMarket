@@ -1,6 +1,9 @@
 import { Auth, HuaweiLoginManager, TitleBar, } from '@CH/common';
 import { promptAction, router } from '@kit.ArkUI';
 import { huaweiLoginAPI, loginAPI, LoginReqDataType } from '../api/login';
+import { AAID, pushService } from '@kit.PushKit';
+import { pushAPI } from '../api/push';
+import { Log } from '@abner/log';
 
 interface LoginFormType {
   account: string,
@@ -103,6 +106,16 @@ struct LoginPage {
               const res = await huaweiLoginAPI(code)
               // 全局存入用户信息
               Auth.setUser(res.data.result)
+              const pushToken: string = await pushService.getToken()
+              const aaid: string = await AAID.getAAID()
+              try {
+                pushAPI({
+                  token: pushToken,
+                  deviceId: aaid
+                })
+              } catch (e) {
+                Log.error(e)
+              }
               // 跳转到应用首页
               router.pushUrl({
                 url: 'pages/Index'

@@ -3,6 +3,7 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { Log } from '@abner/log';
 import { Auth } from '@CH/common/Index';
+import { notificationManager } from '@kit.NotificationKit';
 
 export default class EntryAbility extends UIAbility {
   // 存放拉起页地址
@@ -23,6 +24,20 @@ export default class EntryAbility extends UIAbility {
       this.selectPage = params.targetPage
       console.log('当前selectPage:', this.selectPage)
     }
+    // 请求用户推送权限
+
+    notificationManager.isNotificationEnabled().then((data: boolean) => {
+      console.info("isNotificationEnabled success, data: " + JSON.stringify(data));
+      if (!data) {
+        notificationManager.requestEnableNotification().then(async () => {
+          console.info(`[ANS] requestEnableNotification success`)
+        }).catch(() => {
+
+        })
+      }
+    }).catch(() => {
+
+    })
   }
 
   onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
