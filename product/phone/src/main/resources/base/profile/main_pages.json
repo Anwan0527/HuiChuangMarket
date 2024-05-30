@@ -12,6 +12,8 @@
     "pages/PayPage",
     "pages/AliPayResultPage",
     "pages/OrderPage",
-    "pages/HotRecommendPage"
+    "pages/HotRecommendPage",
+    "pages/MapPage",
+    "pages/CustomerServicePage"
   ]
 }
